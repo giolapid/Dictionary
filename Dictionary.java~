@@ -1,0 +1,146 @@
+// Gio Lapid
+// 1262354
+// CS12B
+// PA3
+// Dictionary.java
+// Dictionary ADT
+
+public class Dictionary implements DictionaryInterface{
+    // private inner Node class
+    private class Node {
+	String key, value ;
+	Node next;
+	
+	Node(String x, String y){
+	    key = x;
+	    value = y;
+	    next = null;
+	}
+    }
+
+    //Fields for Dictionary class
+    private Node head;  //reference to first Node in Dictionary
+    private int numItems;  //number of pairs in this Dictionary
+
+    //private helper function----------------------------------------------------------------
+    //private method of findKey
+    private Node findKey(String key){
+	Node N = head;
+	while(N != null && N.key != key){
+	    N = N.next;
+	}
+	return N;
+    }
+    
+    //private method of finding previous key for delete()
+    private Node findPrev(String key){
+	Node N = head;
+	while(N.next != null && N.next.key != key){
+	    N = N.next;
+	}
+	return N;
+    }
+    //ADT operations--------------------------------------------------------------------------
+
+    //isEmpty
+    //pre: none
+    //post: returns true if this Dictionary is empty, false otherwise
+    public boolean isEmpty(){
+	return(numItems == 0);
+    }
+
+    //size
+    //pre: none
+    //post: returns the number of entries in this Dictionary
+    public int size(){
+	return numItems;
+    }
+
+    //lookup
+    //pre: none
+    //post: returns value associated key or null reference if no such key exists
+    public String lookup(String key){
+	Node N = findKey(key);
+	if(N != null) return N.value;
+	else return null;
+    }
+
+    //insert
+    //inserts new(key, value) pair into this Dictionary
+    //pre: key currently does not exists in this Dictionary, i.e. lookup(key) == null
+    //post: !=isEmpty(), size() is increased by one
+    public void insert(String key, String value) throws KeyCollisionException{
+	if(lookup(key) != null)
+	    throw new KeyCollisionException("Dictionary: insert() cannot insert duplicate keys.");
+	//if the dictionary is empty add Node to the Dictionary
+	else if(numItems == 0){   
+	    Node N = new Node(key, value);
+	    N.next = head;
+	    head = N;
+	    numItems++;
+  	}
+	else if(lookup(key) == null){
+	    Node C = head;
+	    while(C.next != null){
+			C = C.next;
+		}
+	    C.next = new Node(key, value);
+	    numItems++;
+	}
+    }
+    
+    //delete
+    //delete pair with the given key
+    //pre: key currently exists in this Dictionary, i.e. lookup(key) != null
+    //post: size() is decreased by one
+    public void delete(String key)throws KeyNotFoundException{
+	Node N = findKey(key);
+	if(lookup(key) == null)
+	    throw new KeyNotFoundException("Dictionary: delete() cannot delete non-existent key.");
+	
+	//if the Dictionary only had one item
+	else if(lookup(key) != null && numItems == 1){
+	    head = null;
+	    numItems = 0;
+	}
+       	//if the target is in the head of the linked list
+	else if(lookup(key) != null && N == head){
+	    head = head.next;
+	    N.next = null;
+	    numItems--;
+	}
+	//if the target is in the middle or in the end then use this
+	else  if(lookup(key) != null){
+	    Node Z = findKey(key);
+      	    Node P = findPrev(key);
+	    if(Z.next != null){   //deleting from middle
+		P.next = Z.next;
+		Z = null;
+	    }
+	    else if(Z.next == null){  //deleting from tail
+		P.next = null;
+		Z = null;
+	    }
+	    numItems--;
+	}	
+    }
+
+    //makeEmpty
+    //pre: none
+    //post: isEmpty()
+    public void makeEmpty(){
+	numItems = 0;
+	head = null;
+    }
+
+    //toString
+    //overrides Object's toString method
+    //pre: none
+    //post: returns a String representation of this Dictionary
+    public String toString(){
+	String s = "";
+	for(Node N = head; N != null; N = N.next)
+	    s += N.key + " " + N.value + "\n";
+	return s;
+    }
+}

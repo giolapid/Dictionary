@@ -1,0 +1,17 @@
+Gio Lapid
+CMPS 12 B
+7/22/13
+PA3: Dictionary
+An Dictionary ADT made using a linked list that will consist of key and value.
+It has eight operations they include: isEmpty(), size(), lookup(), insert(), 
+delete(), lookup(), insert(), makeEmpty(), toString()
+-------------------------------------------------------------------------------
+
+Table of Contents
+      i. Dictionary.java
+      ii. DictionaryTest.java
+      iii. KeyCollisionException.java
+      iv. KeyNotFoundException.java
+      v. DictionaryInterface.java
+      vi. DictionaryClient.java
+      vii. makefile
